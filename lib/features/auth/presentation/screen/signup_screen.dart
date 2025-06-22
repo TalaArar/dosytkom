@@ -1,0 +1,307 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:dosytkom/features/auth/presentation/screen/login.dart';
+import 'package:flutter/material.dart';
+
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  int currentStep = 1;
+  final List<String> countries = const ['الأردن'];
+  final List<String> cities = const ['الزرقاء', 'عمان', 'السلط'];
+  final List<String> areas = const ['الوحدات', 'الزهور', 'الجبيهة'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: const Color(0xFFF6F9FC),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  const SizedBox(height: 30),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: SizeTransition(
+                          sizeFactor: animation,
+                          axis: Axis.vertical,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: currentStep == 1 ? _buildStepOne() : _buildStepTwo(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Text(
+          "إنشاء حساب مكتبة",
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF12416F),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Container(
+          width: 150,
+          height: 6,
+          decoration: BoxDecoration(
+            color: const Color(0xFFB7B4B4).withOpacity(0.3),
+            borderRadius: BorderRadius.circular(3),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: currentStep,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0E73B7),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+              ),
+              Expanded(flex: 2 - currentStep, child: const SizedBox()),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepOne() {
+    return _buildFormContainer(
+      key: const ValueKey(1),
+      children: [
+        _buildTextField('الإسم الأول', Icons.person_outline),
+        _buildTextField('الإسم الأخير', Icons.person_outline),
+        _buildTextField('رقم الهاتف', Icons.phone_android_outlined),
+        const SizedBox(height: 25),
+        _buildNextButton(),
+        const SizedBox(height: 15),
+        _buildLoginPrompt(),
+      ],
+    );
+  }
+
+  Widget _buildStepTwo() {
+    return _buildFormContainer(
+      key: const ValueKey(2),
+      children: [
+        _buildTextField('اسم المكتبة', Icons.store_outlined),
+        _buildDropdown('الدولة', countries, Icons.flag_outlined),
+        _buildDropdown('المدينة', cities, Icons.location_city_outlined),
+        _buildDropdown('المنطقة', areas, Icons.location_on_outlined),
+        _buildTextField('رقم المكتبة1', Icons.phone_outlined),
+        _buildTextField('رقم المكتبة2', Icons.phone_outlined),
+        const SizedBox(height: 25),
+        _buildSignupButton(),
+        _buildBackButton(),
+        const SizedBox(height: 15),
+        _buildLoginPrompt(),
+      ],
+    );
+  }
+
+  Widget _buildFormContainer({
+    required Key key,
+    required List<Widget> children,
+  }) {
+    return Material(
+      key: key,
+      elevation: 2,
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(25),
+        child: Column(children: children),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String hint, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(color: Color(0xFFB7B4B4)),
+          prefixIcon: Icon(icon, color: const Color(0xFF12416F)),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 20,
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: const Color(0xFFB7B4B4).withOpacity(0.3),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFF0E73B7), width: 1.5),
+          ),
+        ),
+        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _buildDropdown(String hint, List<String> items, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: CustomDropdown.search(
+          hintText: hint,
+          items: items,
+          onChanged: (value) {},
+          decoration: CustomDropdownDecoration(
+            closedFillColor: Colors.white,
+            expandedFillColor: Colors.white,
+            closedBorder: Border.all(
+              color: const Color(0xFFB7B4B4).withOpacity(0.3),
+            ),
+            expandedBorder: Border.all(
+              color: const Color(0xFF0E73B7),
+              width: 1.5,
+            ),
+            hintStyle: const TextStyle(color: Color(0xFFB7B4B4)),
+            headerStyle: const TextStyle(
+              color: Color(0xFF12416F),
+              fontWeight: FontWeight.w500,
+            ),
+            listItemStyle: const TextStyle(color: Color(0xFF12416F)),
+            prefixIcon: Icon(icon, color: const Color(0xFF12416F)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNextButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF0E73B7),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 2,
+        ),
+        onPressed: () {
+          setState(() {
+            currentStep = 2;
+          });
+        },
+        child: const Text(
+          "التالي",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSignupButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF12416F),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 2,
+        ),
+        onPressed: () {
+          // تسجيل الحساب
+        },
+        child: const Text(
+          "إنشاء الحساب",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBackButton() {
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          currentStep = 1;
+        });
+      },
+      child: const Text(
+        "رجوع",
+        style: TextStyle(
+          fontSize: 15,
+          color: Color(0xFF12416F),
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginPrompt() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+       TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+            );
+          },
+          child: const Text(
+            "تسجيل الدخول",
+
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF0E73B7),
+            ),
+          ),
+        ),
+        const Text("هل لديك حساب؟", style: TextStyle(color: Color(0xFF12416F))),
+        
+      ],
+    );
+  }
+}
