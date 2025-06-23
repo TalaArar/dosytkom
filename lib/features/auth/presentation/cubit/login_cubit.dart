@@ -1,70 +1,71 @@
+import 'package:dosytkom/core/utl/constant_values.dart';
+import 'package:dosytkom/core/utl/secure_storage.dart';
+import 'package:dosytkom/features/auth/domain/entity/auth_entity.dart';
+import 'package:dosytkom/features/auth/domain/use_case/login_use_use_case.dart';
+import 'package:dosytkom/features/auth/presentation/state/login_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-// import 'package:dosytkom/core/utl/constant_values.dart';
-// import 'package:dosytkom/core/utl/secure_storage.dart';
-// import 'package:dosytkom/features/auth/data/model/auth_model.dart';
-// import 'package:dosytkom/features/auth/domain/use_case/login_use_use_case.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
+class LoginCubit extends Cubit<LoginState> {
+  final LoginUseCase loginUseCase;
 
+  LoginCubit({required this.loginUseCase}) : super(LoginStateInitial());
 
-// import '../state/login_state.dart';
+  Future<void> login({required String phone, required String password}) async {
+    emit(LoginStateLoading());
 
-// class LoginCubit extends Cubit<LoginState> {
-//   LoginUseCase loginUseCase;
+    try {
+      final authEntity = await loginUseCase.call(
+        phone: phone,
+        password: password,
+      );
 
-//   LoginCubit({required this.loginUseCase}) : super(LoginStateInitial());
+      if (authEntity.status == true) {
+        // افترضت أن AuthEntity يحتوي result
+        await SecureStorageHelper().savePrefString(
+          key: ConstantValues.password,
+          value: password,
+        );
+        await SecureStorageHelper().savePrefString(
+          key: ConstantValues.phone,
+          value: phone,
+        );
 
-//   login({required String phone, required String password}) async {
-//     emit(LoginStateLoading());
-//     await loginUseCase
-//         .call(phone: phone, password: password)
-//         .then(
-//           (value) {
-//             if (value.result!) {
-              
-              
-//               SecureStorageHelper().savePrefString(
-//                 key: ConstantValues.phone,
-//                 value: value.password!,
-//               );
+        emit(LoginStateSuccess(authEntity: authEntity));
+      } else {
+        emit(
+          LoginStateError(
+            errorMessage: authEntity.resultMessage ?? "فشل تسجيل الدخول",
+          ),
+        );
+      }
+    } catch (error) {
+      emit(LoginStateError(errorMessage: error.toString()));
+    }
+  }
 
-//               SecureStorageHelper().savePrefString(
-//                 key: ConstantValues.phone,
-//                 value: value.phone!,
-//               );
+  Future<void> getData() async {
+    emit(LoginStateLoading());
 
-//               emit(LoginStateSuccess(authModel: value));
-//             } else {
-//               emit(LoginStateError(errorMessage: value.msg!));
-//             }
-//           },
-//           onError: (error) {
-//             emit(LoginStateError(errorMessage: error.toString()));
-//           },
-//         );
-//   }
+    final password = await SecureStorageHelper().getPrefString(
+      key: ConstantValues.password,
+      defaultValue: "",
+    );
+    final phone = await SecureStorageHelper().getPrefString(
+      key: ConstantValues.phone,
+      defaultValue: "",
+    );
 
-//   getData() async {
-//     emit(LoginStateLoading());
+    final authEntity = AuthEntity(
+      password: password,
+      userName: phone,
+      userType: '',
+      loginToken: '',
+      status: null,
+      resultMessage: '',
+      refNo: '', firstName: '', lastName: '', libraryName: '', countryId: null, cityId: null, locationId: null, phoneNumber: '',
+     
+    );
 
-    
-//     String password = await SecureStorageHelper().getPrefString(
-//       key: ConstantValues.password,
-//       defaultValue: "",
-//     );
-//     String phone = await SecureStorageHelper().getPrefString(
-//       key: ConstantValues.phone,
-//       defaultValue: "",
-//     );
-
-//     emit(
-//       LoginStateSuccess(
-//         authModel: AuthModel(
-//           password: password,
-//           phone: phone,
-//         ),
-//       ),
-//     );
-//   }
-
-  
-// }
+    emit(LoginStateSuccess(authEntity: authEntity));
+  }
+}

@@ -1,22 +1,25 @@
-import 'package:dosytkom/features/auth/data/model/auth_model.dart';
+// features/auth/presentation/cubit/login_state.dart
+
+import 'package:dosytkom/features/auth/domain/entity/auth_entity.dart';
 
 abstract class LoginState {}
+
+class LoginStateInitial extends LoginState {}
 
 class LoginStateLoading extends LoginState {}
 
 class LoginStateSuccess extends LoginState {
-  AuthModel authModel;
+  final AuthEntity authEntity;
 
-  LoginStateSuccess({required this.authModel});
+  LoginStateSuccess({required this.authEntity});
+  
 }
 
 class LoginStateError extends LoginState {
-  String errorMessage;
+  final String errorMessage;
 
   LoginStateError({required this.errorMessage});
 }
-
-class LoginStateInitial extends LoginState {}
 
 class LogoutState extends LoginState {}
 
