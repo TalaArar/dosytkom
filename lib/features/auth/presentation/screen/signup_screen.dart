@@ -74,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
-                    _buildHeader(),
+                    buildHeader(),
                     const SizedBox(height: 30),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 400),
@@ -88,7 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         );
                       },
-                      child: currentStep == 1 ? _buildStepOne() : _buildStepTwo(),
+                      child: currentStep == 1 ? buildStepOne() : _buildStepTwo(),
                     ),
                   ],
                 ),
@@ -100,7 +100,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget buildHeader() {
     return Column(
       children: [
         const Text(
@@ -135,21 +135,21 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildStepOne() {
+  Widget buildStepOne() {
     return Form(
       key: _formKeyStep1,
-      child: _buildFormContainer(
+      child: buildFormContainer(
         key: const ValueKey(1),
         children: [
-          _buildTextField('الإسم الأول', Icons.person_outline, firstNameController),
-          _buildTextField('الإسم الأخير', Icons.person_outline, lastNameController),
-          _buildPhoneField('رقم الهاتف', Icons.phone_android_outlined, (number) {
+          buildTextField('الإسم الأول', Icons.person_outline, firstNameController),
+          buildTextField('الإسم الأخير', Icons.person_outline, lastNameController),
+          buildPhoneField('رقم الهاتف', Icons.phone_android_outlined, (number) {
             phoneNumber = number;
           }),
           const SizedBox(height: 25),
-          _buildNextButton(),
+          buildNextButton(),
           const SizedBox(height: 15),
-          _buildLoginPrompt(),
+          buildLoginPrompt(),
         ],
       ),
     );
@@ -158,36 +158,36 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget _buildStepTwo() {
     return Form(
       key: _formKeyStep2,
-      child: _buildFormContainer(
+      child: buildFormContainer(
         key: const ValueKey(2),
         children: [
-          _buildTextField('اسم المكتبة', Icons.store_outlined, libraryNameController),
-          _buildDropdown('الدولة', countries, Icons.flag_outlined, (String? val) {
+          buildTextField('اسم المكتبة', Icons.store_outlined, libraryNameController),
+          buildDropdown('الدولة', countries, Icons.flag_outlined, (String? val) {
             selectedCountry = val;
           }),
-          _buildDropdown('المدينة', cities, Icons.location_city_outlined, (String? val) {
+          buildDropdown('المدينة', cities, Icons.location_city_outlined, (String? val) {
             selectedCity = val;
           }),
-          _buildDropdown('المنطقة', areas, Icons.location_on_outlined, (String? val) {
+          buildDropdown('المنطقة', areas, Icons.location_on_outlined, (String? val) {
             selectedArea = val;
           }),
-          _buildPhoneField('رقم المكتبة1', Icons.phone_outlined, (number) {
+          buildPhoneField('رقم المكتبة1', Icons.phone_outlined, (number) {
             libraryPhone1 = number;
           }),
-          _buildPhoneField('رقم المكتبة2', Icons.phone_outlined, (number) {
+          buildPhoneField('رقم المكتبة2', Icons.phone_outlined, (number) {
             libraryPhone2 = number;
           }),
           const SizedBox(height: 25),
-          _buildSignupButton(),
-          _buildBackButton(),
+          buildSignupButton(),
+          buildBackButton(),
           const SizedBox(height: 15),
-          _buildLoginPrompt(),
+          buildLoginPrompt(),
         ],
       ),
     );
   }
 
-  Widget _buildFormContainer({required Key key, required List<Widget> children}) {
+  Widget buildFormContainer({required Key key, required List<Widget> children}) {
     return Material(
       key: key,
       elevation: 2,
@@ -200,7 +200,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildTextField(String hint, IconData icon, TextEditingController controller) {
+  Widget buildTextField(String hint, IconData icon, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: TextFormField(
@@ -233,7 +233,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildPhoneField(String hint, IconData icon, Function(String?)? onChanged) {
+  Widget buildPhoneField(String hint, IconData icon, Function(String?)? onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: IntlMobileField(
@@ -274,7 +274,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildDropdown(String hint, List<String> items, IconData icon, Function(String?)? onChanged) {
+  Widget buildDropdown(String hint, List<String> items, IconData icon, Function(String?)? onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: ClipRRect(
@@ -298,7 +298,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildNextButton() {
+  Widget buildNextButton() {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -320,7 +320,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildSignupButton() {
+  Widget buildSignupButton() {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -356,7 +356,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildBackButton() {
+  Widget buildBackButton() {
     return TextButton(
       onPressed: () {
         setState(() {
@@ -367,7 +367,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildLoginPrompt() {
+  Widget buildLoginPrompt() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

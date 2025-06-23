@@ -32,7 +32,6 @@ class ApiClient<T> {
     print(response.statusCode);
     print(response.body);
 
-
     if (response.statusCode == 200) {
       var jsonBody = jsonDecode(response.body);
       var data = jsonBody['data'];
@@ -48,43 +47,43 @@ class ApiClient<T> {
   }
 
   static Future<T> postData<T>({
-  required String endpoint,
-  T Function(dynamic data)? fromJsonT,
-  required Map<String, dynamic> body,
-}) async {
-  final response = await http.post(
-    Uri.parse("${ConstantValues.baseUrl}$endpoint"),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode(body),
-  );
+    required String endpoint,
+    T Function(dynamic data)? fromJsonT,
+    required Map<String, dynamic> body,
+  }) async {
+    final response = await http.post(
+      Uri.parse("${ConstantValues.baseUrl}$endpoint"),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
 
-  print("📤 POST to: ${ConstantValues.baseUrl}$endpoint");
-  print("📦 Body: ${jsonEncode(body)}");
-  print("📥 Status Code: ${response.statusCode}");
-  print("📩 Response Body: ${response.body}");
+    print("📤 POST to: ${ConstantValues.baseUrl}$endpoint");
+    print("📦 Body: ${jsonEncode(body)}");
+    print("📥 Status Code: ${response.statusCode}");
+    print("📩 Response Body: ${response.body}");
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final jsonBody = jsonDecode(response.body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final jsonBody = jsonDecode(response.body);
 
-    /// التحقق من قيمة `status` داخل الاستجابة
-    if (jsonBody is Map<String, dynamic> && jsonBody.containsKey('status')) {
-  if (jsonBody['status'] == false) {
-    final message = (jsonBody['resultMessage'] != null && jsonBody['resultMessage'].toString().trim().isNotEmpty)
-        ? jsonBody['resultMessage']
-        : 'فشل في العملية، الرجاء المحاولة لاحقًا';
-    print("❌ API Returned Error: $message");
-    throw Exception(message);
+      if (jsonBody is Map<String, dynamic> && jsonBody.containsKey('status')) {
+        if (jsonBody['status'] == false) {
+          final message =
+              (jsonBody['resultMessage'] != null &&
+                  jsonBody['resultMessage'].toString().trim().isNotEmpty)
+              ? jsonBody['resultMessage']
+              : 'فشل في العملية، الرجاء المحاولة لاحقًا';
+          print("❌ API Returned Error: $message");
+          throw Exception(message);
+        }
+      }
+
+      return fromJsonT!(jsonBody);
+    } else {
+      throw Exception(
+        "Something went wrong: ${response.statusCode} - ${response.body}",
+      );
+    }
   }
-}
-
-
-    return fromJsonT!(jsonBody);
-  } else {
-    throw Exception("Something went wrong: ${response.statusCode} - ${response.body}");
-  }
-}
 
   static Future<T> putData<T>({
     required String endpoint,
