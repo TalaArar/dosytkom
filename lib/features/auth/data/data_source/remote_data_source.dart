@@ -18,18 +18,29 @@ abstract class RemoteDataSource {
 }
 
 class AuthRemoteDataSource implements RemoteDataSource {
-  @override
-  Future<AuthModel> login({
-    required String phone,
-    required String password,
-  }) async {
-    final response = await ApiClient.postData(
-      endpoint: "LoginSystem",
-      body: {"userName": phone, "password": password},
-      fromJsonT: (data) => AuthModel.fromJson(json: data),
-    );
-    return response;
-  }
+ 
+@override
+Future<AuthModel> login({
+  required String phone,
+  required String password,
+}) async {
+  final response = await ApiClient.getData(
+  endPoint: "LoginSystem",
+  headers: {
+    "UserId": phone,
+    "UserPwd": password,
+    "lang": "1",
+  },
+  fromJsonT: (data) {
+    print("⛏ JSON Received in fromJson: $data");
+    return AuthModel.fromJson(json: data);
+  },
+);
+
+  return response;
+}
+
+
 
   @override
 Future<AuthModel> signUp({

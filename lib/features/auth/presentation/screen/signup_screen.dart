@@ -1,10 +1,13 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:dosytkom/core/utl/general.dart';
+import 'package:dosytkom/features/auth/data/model/country_model.dart';
 import 'package:dosytkom/features/auth/presentation/cubit/signup_cubit.dart';
 import 'package:dosytkom/features/auth/presentation/screen/login.dart';
 import 'package:dosytkom/features/auth/presentation/state/signup_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_mobile_field/intl_mobile_field.dart';
+
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -35,7 +38,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final List<String> countries = const ['الأردن'];
   final List<String> cities = const ['الزرقاء', 'عمان', 'السلط'];
   final List<String> areas = const ['الوحدات', 'الزهور', 'الجبيهة'];
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<SignupCubit, SignupState>(
@@ -47,14 +49,13 @@ class _SignupScreenState extends State<SignupScreen> {
             builder: (_) => const Center(child: CircularProgressIndicator()),
           );
         } else if (state is SignupSuccess) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("تم إنشاء الحساب بنجاح")),
-          );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const LoginScreen()),
-          );
+  Navigator.pop(context);
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(state.message)),
+  );
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (_) => const LoginScreen()),);
         } else if (state is SignupError) {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -348,6 +349,7 @@ class _SignupScreenState extends State<SignupScreen> {
               countryId: 0,
               cityId: 0,
               locationId: 0,
+             deviceId: AppGeneral.deviceId,
             );
           }
         },

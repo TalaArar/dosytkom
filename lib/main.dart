@@ -1,30 +1,42 @@
+import 'dart:developer';
+
 import 'package:dosytkom/core/routes/app_pages.dart';
+import 'package:dosytkom/core/utl/general.dart';
 import 'package:dosytkom/features/SplashScreen/presentation/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
-void main() {
-  runApp(const MyApp());
+ _readAndroidBuildData(AndroidDeviceInfo build) {
+  AppGeneral.deviceId=build.device;
+  return AppGeneral.deviceId;
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+   _readAndroidBuildData(await deviceInfo.androidInfo);
+  log(AppGeneral.deviceId);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Map<String, dynamic>? deviceData;
+  const MyApp({super.key, this.deviceData});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    print('Received device data in MyApp: $deviceData');
     return MultiBlocProvider(
       providers: AppPages.providers,
       child: MaterialApp(
+        title: 'Flutter Demo',
 
-      title: 'Flutter Demo',
-     
-      theme: ThemeData(
-    fontFamily: 'Cairo',
-  ),
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
-    ),
+        theme: ThemeData(fontFamily: 'Cairo'),
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      ),
     );
   }
 }

@@ -56,7 +56,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         const Text(
-          "أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور",
+          "أدخل  رقم الهاتف لإرسال رابط إعادة تعيين كلمة المرور",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
@@ -90,9 +90,9 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget _buildEmailField() {
     return TextFormField(
       decoration: InputDecoration(
-        hintText: "البريد الإلكتروني",
+        hintText: " رقم الهاتف",
         hintStyle: const TextStyle(color: Color(0xFFB7B4B4)),
-        prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF12416F)),
+        prefixIcon: const Icon(Icons.phone, color: Color(0xFF12416F)),
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -109,7 +109,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         ),
       ),
       style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.phone,
     );
   }
 
@@ -130,7 +130,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             const SnackBar(
               backgroundColor: Color(0xFF0E73B7),
               content: Text(
-                "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+                "تم إرسال رابط إعادة تعيين كلمة المرور إلى  رقم الهاتف",
                 style: TextStyle(color: Colors.white),
               ),
             ),

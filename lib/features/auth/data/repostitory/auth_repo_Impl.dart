@@ -9,11 +9,8 @@ class AuthRepoImpl extends AuthRepository {
   AuthRepoImpl({required this.dataSource});
 
   @override
-  Future<AuthModel> login({
-    required String phone,
-    required String password,
-  }) async {
-    return await dataSource.login(phone: phone, password: password);
+  Future<AuthEntity> login({required String phone, required String password}) {
+    return dataSource.login(phone: phone, password: password);
   }
 
   @override
@@ -27,7 +24,7 @@ class AuthRepoImpl extends AuthRepository {
     required String phoneNumber,
     String? secondPhoneNumber,
   }) async {
-     return await dataSource.signUp(
+    return await dataSource.signUp(
       firstName: firstName,
       lastName: lastName,
       libraryName: libraryName,

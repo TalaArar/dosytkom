@@ -297,7 +297,7 @@ class _TalabatScreenState extends State<TalabatScreen> {
   Widget _buildEditButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>NewOrder()));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>NewOrderScreen()));
       },
       child: Container(
         width: double.infinity,

@@ -5,20 +5,31 @@ import 'package:http/http.dart' as http;
 import '../utl/constant_values.dart';
 
 class ApiClient<T> {
+ 
   static Future<T> getData<T>({
-    required String endPoint,
-    T Function(dynamic data)? fromJsonT,
-  }) async {
-    final response = await http.get(
-      Uri.parse("${ConstantValues.baseUrl}$endPoint"),
-    );
-    if (response.statusCode == 200) {
-      var jsonBody = jsonDecode(response.body);
-      return fromJsonT!(jsonBody);
-    } else {
-      throw Exception("Something went wrong");
-    }
+  required String endPoint,
+  T Function(dynamic data)? fromJsonT,
+  Map<String, String>? queryParams,
+  Map<String, String>? headers, // ✅ أضفنا هذا
+}) async {
+  final uri = Uri.parse("${ConstantValues.baseUrl}$endPoint")
+      .replace(queryParameters: queryParams);
+
+  print("📤 GET: $uri");
+
+  final response = await http.get(
+    uri,
+    headers: headers, 
+  );
+
+  if (response.statusCode == 200) {
+    var jsonBody = jsonDecode(response.body);
+    return fromJsonT!(jsonBody);
+  } else {
+    throw Exception("Something went wrong");
   }
+}
+
 
   static Future<List<T>> getDataList<T>({
     required String endPoint,

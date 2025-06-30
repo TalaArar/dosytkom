@@ -1,3 +1,4 @@
+import 'package:dosytkom/core/utl/general.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_mobile_field/intl_mobile_field.dart';
@@ -25,15 +26,25 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is LoginStateError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage)),
+            SnackBar(
+              content: Text(
+                state.errorMessage,
+                textDirection: TextDirection.rtl,
+              ),
+              backgroundColor: Colors.red.shade400,
+            ),
           );
         } else if (state is LoginStateSuccess) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const DashboardScreen()),
           );
         }
       },
+
       builder: (context, state) {
         final isLoading = state is LoginStateLoading;
 
@@ -97,12 +108,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 30),
 
-                            // رقم الهاتف
                             IntlMobileField(
                               initialCountryCode: "JO",
                               decoration: InputDecoration(
                                 hintText: "رقم الهاتف",
-                                hintStyle: const TextStyle(color: Color(0xFFB7B4B4)),
+                                hintStyle: const TextStyle(
+                                  color: Color(0xFFB7B4B4),
+                                ),
                                 filled: true,
                                 fillColor: Colors.grey.shade400,
                                 contentPadding: const EdgeInsets.symmetric(
@@ -128,13 +140,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               favorite: ["JO", "SA", "AE"],
                               favoriteCountryCodePosition: Position.trailing,
                               onChanged: (number) {
-                                fullPhoneNumber = "${number.countryCode}${number.number}";
+                                String cleanNumber = number.number
+                                    .replaceAll(RegExp(r'^\+'), '')
+                                    .replaceFirst(RegExp(r'^0+'), '');
+                                fullPhoneNumber =
+                                    "${number.countryCode}$cleanNumber";
                               },
                               validator: (mobileNumber) {
-                                if (mobileNumber == null || mobileNumber.number.isEmpty) {
+                                if (mobileNumber == null ||
+                                    mobileNumber.number.isEmpty) {
                                   return 'يرجى إدخال رقم الهاتف';
                                 }
-                                if (!RegExp(r'^[0-9]+$').hasMatch(mobileNumber.number)) {
+                                if (!RegExp(
+                                  r'^[0-9]+$',
+                                ).hasMatch(mobileNumber.number)) {
                                   return 'مسموح فقط بالأرقام';
                                 }
                                 return null;
@@ -159,7 +178,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const ForgotPasswordScreen(),
+                                      builder: (context) =>
+                                          const ForgotPasswordScreen(),
                                     ),
                                   );
                                 },
@@ -176,13 +196,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 10),
 
-                            // زر الدخول
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF0E73B7),
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -191,23 +212,52 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: isLoading
                                     ? null
                                     : () {
-                                        final password = passwordController.text.trim();
-                                        if (fullPhoneNumber == null || password.isEmpty) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                        final password = passwordController.text
+                                            .trim();
+                                        if (fullPhoneNumber == null ||
+                                            password.isEmpty) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             const SnackBar(
-                                              content: Text("يرجى تعبئة جميع الحقول"),
+                                              content: Text(
+                                                "يرجى تعبئة جميع الحقول",
+                                              ),
                                             ),
                                           );
                                           return;
                                         }
 
+                                        if (!fullPhoneNumber!.startsWith(
+                                          '+962',
+                                        )) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "يرجى إدخال رقم هاتف أردني صحيح",
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        print(
+                                          "📞 fullPhoneNumber: $fullPhoneNumber",
+                                        );
+                                        print("🔑 password: $password");
+
                                         context.read<LoginCubit>().login(
-                                              phone: fullPhoneNumber!,
-                                              password: password,
-                                            );
+                                          phone: fullPhoneNumber!,
+                                          password: password,
+                                          deviceId: AppGeneral.deviceId,
+                                        );
                                       },
                                 child: isLoading
-                                    ? const CircularProgressIndicator(color: Colors.white)
+                                    ? const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
                                     : const Text(
                                         "دخول",
                                         style: TextStyle(
@@ -230,7 +280,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const SignupScreen(),
+                                        builder: (context) =>
+                                            const SignupScreen(),
                                       ),
                                     );
                                   },

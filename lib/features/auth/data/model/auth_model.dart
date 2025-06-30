@@ -1,15 +1,16 @@
 import 'package:dosytkom/features/auth/domain/entity/auth_entity.dart';
-
 class AuthModel extends AuthEntity {
   AuthModel({
-    required super.userName,
-    super.userType,
+    
+    required super. phone,
+  required super. password,
+    super.deviceId,
     super.loginToken,
-    required super.password,
-    super.status,
+    super.userType,
+    required super.status,
     required super.resultMessage,
     super.refNo,
-   required super.firstName,
+    required super.firstName,
     required super.lastName,
     required super.libraryName,
     required super.countryId,
@@ -20,37 +21,39 @@ class AuthModel extends AuthEntity {
   });
 
   factory AuthModel.fromJson({required Map<String, dynamic> json}) {
-    print("⛏ JSON Received in fromJson: $json");
+  print("⛏ JSON Received in fromJson: $json");
 
-    return AuthModel(
-      userName: json['userName']?.toString() ?? '',
-      userType: json['userType']?.toString(),
-      loginToken: json['loginToken']?.toString(),
-      password: json['password']?.toString(),
-      status: json['status'] == true,
-      resultMessage: json['resultMessage']?.toString() ?? '',
-      refNo: json['refNo']?.toString(),
-       firstName: json["firsT_NAME"],
-      lastName: json["lasT_NAME"],
-      libraryName: json["librarY_NAME"],
-      countryId: json["librarY_CUNTRY"],
-      cityId: json["librarY_CITY"],
-      locationId: json["librarY_LOCATION"],
-      phoneNumber: json["useR_PHONE_NUMBER"],
-      secondPhoneNumber: json["librarY_SECOND_PHONE_NUMBER"],
-    );
-  }
+  return AuthModel(
+    phone: json['phone'] ?? '',
+    password: json['password'] ?? '',
+    deviceId: json['id']?.toString(),
+    loginToken: json['loginToken'] ?? '',
+    userType: json['userType'] ?? '',
+    status: json['status'] ?? false,
+    resultMessage: json['resultMessage'] ?? '',
+    refNo: json['refNo']?.toString(),
+    firstName: json["firsT_NAME"] ?? '',
+    lastName: json["lasT_NAME"] ?? '',
+    libraryName: json["librarY_NAME"] ?? '',
+    countryId: json["librarY_CUNTRY"] ?? 0,
+    cityId: json["librarY_CITY"] ?? 0,
+    locationId: json["librarY_LOCATION"] ?? 0,
+    phoneNumber: json["useR_PHONE_NUMBER"] ?? '',
+    secondPhoneNumber: json["librarY_SECOND_PHONE_NUMBER"],
+  );
+}
 
   Map<String, dynamic> toJson() {
     return {
-      'userName': userName,
-      'userType': userType,
-      'loginToken': loginToken,
+      'phone': phone,
       'password': password,
+      'deviceId':'deviceId',
+      'loginToken': loginToken,
+      'userType': userType,
       'status': status,
       'resultMessage': resultMessage,
       'refNo': refNo,
-       "firsT_NAME": firstName,
+      "firsT_NAME": firstName,
       "lasT_NAME": lastName,
       "librarY_NAME": libraryName,
       "librarY_CUNTRY": countryId,
