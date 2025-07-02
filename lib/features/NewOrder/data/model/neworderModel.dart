@@ -1,4 +1,4 @@
-import 'package:dosytkom/features/NewOrder/domain/Entity/order_request_entity.dart';
+import'package:dosytkom/features/NewOrder/domain/Entity/order_request_entity.dart';
 
 class NewOrderRequestModel extends OrderRequestEntity {
   NewOrderRequestModel({

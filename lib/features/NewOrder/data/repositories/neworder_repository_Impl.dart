@@ -1,4 +1,8 @@
 import 'package:dosytkom/features/NewOrder/data/data_source/new_order_request.dart';
+import 'package:dosytkom/features/NewOrder/data/model/educationalField_model.dart';
+import 'package:dosytkom/features/NewOrder/data/model/educationalItem_model.dart';
+import 'package:dosytkom/features/NewOrder/data/model/educationalLevel_model.dart';
+import 'package:dosytkom/features/NewOrder/data/model/educationalSemister_model.dart';
 import 'package:dosytkom/features/NewOrder/domain/Entity/order_request_entity.dart';
 import 'package:dosytkom/features/NewOrder/domain/repository/newOrderrepository.dart';
 import 'package:dosytkom/features/auth/domain/entity/auth_entity.dart';
@@ -29,5 +33,28 @@ class RemoteDataSourceImpl extends NewOrderRequestRepository {
 
     );
   }
+
+  
+  
+   @override
+  Future<List<EducationalItem>> getEducationalItems() {
+    return dataSource.fetchEducationalItems();
+  }
+
+  @override
+  Future<List<EducationalLevel>> getEducationalLevels() {
+      return dataSource.fetchEducationalLevels();
+
+  }
+  @override
+Future<List<EducationalField>> getEducationalFields() async {
+  return await dataSource.getEducationalFields();
+}
+@override
+Future<List<EducationalSemister>> getEducationalSemisters() async {
+  return await dataSource.getEducationalSemisters();
+}
+
+
 
 }
